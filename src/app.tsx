@@ -35,13 +35,13 @@ export function App() {
     <>
       {transitions((style, showChat) => {
         return showChat ? (
-          <div className="fixed bottom-3 right-3">
+          <div className="fixed bottom-10 right-10">
             <animated.div style={style}>
-              <ChatPopup onClick={closeChat} />
+              <ChatPopup onClose={closeChat}  />
             </animated.div>
           </div>
         ) : (
-          <div className="fixed bottom-3 right-3">
+          <div className="fixed bottom-10 right-10">
             <animated.div style={style}>
               <button
                 className="btn btn-circle btn-primary btn-lg"
