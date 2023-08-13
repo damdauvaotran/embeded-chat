@@ -72,7 +72,7 @@ const Chat = ({}) => {
 
   /** Elements **/
   return (
-    <div className="flex flex-col" style={{ height: 500 }}>
+    <div className="flex flex-col mt-5" style={{ height: 500 }}>
       <div className="flex flex-1 overflow-auto flex-col-reverse">
         {messages.map((message) => (
           <Bubble
