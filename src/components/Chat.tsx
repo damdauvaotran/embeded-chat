@@ -41,13 +41,13 @@ const Chat = ({}) => {
       time: '12:45',
       content: 'Chào bạn, bạn có thể hỏi tôi bất kỳ câu gì?',
       isResponse: true,
-      footer: 'Delivered',
     },
   ]);
   const [isShowSatisfactionChoose, setIsShowSatisfactionChoose] =
     useState(false);
   const [isShowSatisfactionDialog, setIsShowSatisfactionDialog] =
     useState(false);
+  const [showInitialSupport, setShowInitialSupport] = useState(true);
 
   /** Hooks **/
 
@@ -57,6 +57,9 @@ const Chat = ({}) => {
 
   /** Functions, Events, Actions... **/
   const onChatSubmit = async (messageContent: string) => {
+    if (showInitialSupport) {
+      setShowInitialSupport(false);
+    }
     let newMessages = [
       {
         avatar: userAvatar,
@@ -113,6 +116,38 @@ const Chat = ({}) => {
     setIsShowSatisfactionDialog(true);
   };
 
+  const handleSupportCreateTicket = () => {
+    setShowInitialSupport(false);
+    setIsShowSatisfactionDialog(true);
+  };
+
+  const handleSupportSearchTicket = () => {
+    setShowInitialSupport(false);
+    setMessages([
+      {
+        avatar: supporterAvatar,
+        name: 'Phong vũ support',
+        time: dayjs().format('HH:mm'),
+        content: 'Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn',
+        isResponse: true,
+      },
+      ...messages,
+    ]);
+  };
+
+  const onCreateTicketSuccess = (key: string) => {
+    setMessages([
+      {
+        avatar: supporterAvatar,
+        name: 'Phong vũ support',
+        time: dayjs().format('HH:mm'),
+        content: `Ticket đã được tạo thành công, mã ticket của bạn là ${key}. Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn`,
+        isResponse: true,
+      },
+      ...messages,
+    ]);
+  };
+
   /** Elements **/
   return (
     <div className="flex flex-col mt-5" style={{ height: 450 }}>
@@ -141,6 +176,22 @@ const Chat = ({}) => {
             onClick={handleNoAnswer}
           >
             Không
+          </button>
+        </div>
+      ) : null}
+      {showInitialSupport ? (
+        <div className="flex justify-center">
+          <button
+            className="px-4 py-2 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-sm mx-1 hover:bg-cyan-700"
+            onClick={handleSupportCreateTicket}
+          >
+            Tạo ticket
+          </button>
+          <button
+            className="px-4 py-2 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-sm mx-1 hover:bg-cyan-700"
+            onClick={handleSupportSearchTicket}
+          >
+            Tra cứu ticket
           </button>
         </div>
       ) : null}
@@ -175,6 +226,7 @@ const Chat = ({}) => {
       <TicketCreateModal
         open={isShowSatisfactionDialog}
         setOpen={setIsShowSatisfactionDialog}
+        onSubmitSuccess={onCreateTicketSuccess}
       />
     </div>
   );

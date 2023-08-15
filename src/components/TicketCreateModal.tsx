@@ -30,10 +30,9 @@ const TicketCreateModal = ({
   };
 
   const onSubmit = async (values: ICreateTicketRequest) => {
-    try {
-      const data = await createTicket(values);
-      console.log(data);
-    } catch (error) {}
+    const data = await createTicket(values);
+    onSubmitSuccess?.(data.key);
+    setOpen(false);
   };
 
   return (
