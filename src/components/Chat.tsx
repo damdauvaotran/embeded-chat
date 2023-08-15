@@ -67,7 +67,6 @@ const Chat = ({}) => {
         content: messageContent,
         time: dayjs().format('HH:mm'),
         isResponse: false,
-        footer: 'Delivered',
       },
       ...messages,
     ];
