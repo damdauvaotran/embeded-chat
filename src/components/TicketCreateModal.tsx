@@ -16,6 +16,7 @@ const TicketCreateModal = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ICreateTicketRequest>();
 
   const handleSendTicket = async () => {
@@ -30,9 +31,15 @@ const TicketCreateModal = ({
   };
 
   const onSubmit = async (values: ICreateTicketRequest) => {
-    const data = await createTicket(values);
-    onSubmitSuccess?.(data.key);
-    setOpen(false);
+    try {
+      const data = await createTicket(values);
+      // clear form
+      reset()
+      onSubmitSuccess?.(data.key);
+      setOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -55,13 +62,15 @@ const TicketCreateModal = ({
             id="support-type"
             {...register('supportType')}
           >
-            <option value="payment">Hỗ trợ thanh toán</option>
-            <option value="shipping">Hỗ trợ giao hàng</option>
+            <option value="notification">Hỗ trợ notification</option>
+            <option value="segment">Hỗ trợ user segment</option>
+            <option value="promotion">Hỗ trợ promotion management</option>
           </select>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             Email
+            <span className="text-red-500 ml-1">*</span>
           </label>
           <input
             class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

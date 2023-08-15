@@ -42,7 +42,9 @@ export const createTicket = async (
       'https://media.istockphoto.com/id/1468192804/vi/anh/kh%C3%A1i-ni%E1%BB%87m-t%E1%BA%A1o-ra-h%C3%ACnh-%E1%BA%A3nh-th%E1%BB%B1c-t%E1%BA%BF-b%E1%BA%B1ng-ph%E1%BA%A7n-m%E1%BB%81m-ai.jpg',
       'https://media.istockphoto.com/id/1468192804/vi/anh/kh%C3%A1i-ni%E1%BB%87m-t%E1%BA%A1o-ra-h%C3%ACnh-%E1%BA%A3nh-th%E1%BB%B1c-t%E1%BA%BF-b%E1%BA%B1ng-ph%E1%BA%A7n-m%E1%BB%81m-ai.jpg',
     ],
-    ...body,
+    support_type: body.supportType,
+    description: body.description,
+    customer_email: body.customerEmail,
   });
 
   const myHeaders = new Headers();
