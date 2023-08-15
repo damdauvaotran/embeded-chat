@@ -37,7 +37,7 @@ const Chat = ({}) => {
   const [messages, setMessages] = useState<IMessage[]>([
     {
       avatar: supporterAvatar,
-      name: 'Phong vũ support',
+      name: 'Support',
       time: '12:45',
       content: 'Chào bạn, bạn có thể hỏi tôi bất kỳ câu gì?',
       isResponse: true,
@@ -48,7 +48,7 @@ const Chat = ({}) => {
   const [isShowSatisfactionDialog, setIsShowSatisfactionDialog] =
     useState(false);
   const [showInitialSupport, setShowInitialSupport] = useState(true);
-
+  const [isShowRating, setIsShowRating] = useState(false);
   /** Hooks **/
 
   /** Variables **/
@@ -81,7 +81,7 @@ const Chat = ({}) => {
     const newMessages = [
       {
         avatar: supporterAvatar,
-        name: 'Phong vũ support',
+        name: 'Support',
         time: dayjs().format('HH:mm'),
         content: answer.text,
         isResponse: true,
@@ -102,13 +102,15 @@ const Chat = ({}) => {
     setMessages([
       {
         avatar: supporterAvatar,
-        name: 'Phong vũ support',
+        name: 'Support',
         time: dayjs().format('HH:mm'),
-        content: 'Cảm ơn bạn đã sử dụng dịch vụ của Phong Vũ',
+        content:
+          'Cảm ơn bạn đã sử dụng dịch vụ. Mong bạn hãy đánh giá trải nghiệm hỗ trợ',
         isResponse: true,
       },
       ...messages,
     ]);
+    setIsShowRating(true);
   };
 
   const handleNoAnswer = () => {
@@ -126,9 +128,23 @@ const Chat = ({}) => {
     setMessages([
       {
         avatar: supporterAvatar,
-        name: 'Phong vũ support',
+        name: 'Support',
         time: dayjs().format('HH:mm'),
         content: 'Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn',
+        isResponse: true,
+      },
+      ...messages,
+    ]);
+  };
+
+  const handleRating = (value: PointerEvent) => {
+    setIsShowRating(false);
+    setMessages([
+      {
+        avatar: supporterAvatar,
+        name: 'Support',
+        time: dayjs().format('HH:mm'),
+        content: 'Cảm ơn bạn đã đánh giá',
         isResponse: true,
       },
       ...messages,
@@ -139,7 +155,7 @@ const Chat = ({}) => {
     setMessages([
       {
         avatar: supporterAvatar,
-        name: 'Phong vũ support',
+        name: 'Support',
         time: dayjs().format('HH:mm'),
         content: `Ticket đã được tạo thành công, mã ticket của bạn là ${key}. Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn`,
         isResponse: true,
@@ -193,6 +209,47 @@ const Chat = ({}) => {
           >
             Tra cứu ticket
           </button>
+        </div>
+      ) : null}
+
+      {isShowRating ? (
+        <div className="rating flex justify-center">
+          <input
+            type="radio"
+            name="rating-2"
+            className="mask mask-star-2 bg-orange-400"
+            value={1}
+            onClick={handleRating}
+          />
+          <input
+            type="radio"
+            name="rating-2"
+            className="mask mask-star-2 bg-orange-400"
+            value={2}
+            onClick={handleRating}
+          />
+          <input
+            type="radio"
+            name="rating-2"
+            className="mask mask-star-2 bg-orange-400"
+            value={3}
+            onClick={handleRating}
+          />
+          <input
+            type="radio"
+            name="rating-2"
+            className="mask mask-star-2 bg-orange-400"
+            value={4}
+            onClick={handleRating}
+            checked
+          />
+          <input
+            type="radio"
+            name="rating-2"
+            className="mask mask-star-2 bg-orange-400"
+            value={5}
+            onClick={handleRating}
+          />
         </div>
       ) : null}
 
