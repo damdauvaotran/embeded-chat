@@ -1,9 +1,23 @@
+import { useForm } from 'react-hook-form';
+import { ICreateTicketRequest, createTicket } from '../services/question';
+
 export interface ITicketCreateModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  onSubmitSuccess?: (key: string) => void;
 }
 
-const TicketCreateModal = ({ open, setOpen }: ITicketCreateModalProps) => {
+const TicketCreateModal = ({
+  open,
+  setOpen,
+  onSubmitSuccess,
+}: ITicketCreateModalProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ICreateTicketRequest>();
+
   const handleSendTicket = async () => {
     console.log('send ticket');
     await sleep(1000);
@@ -15,9 +29,20 @@ const TicketCreateModal = ({ open, setOpen }: ITicketCreateModalProps) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
+  const onSubmit = async (values: ICreateTicketRequest) => {
+    try {
+      const data = await createTicket(values);
+      console.log(data);
+    } catch (error) {}
+  };
+
   return (
     <dialog className="modal bg-slate-400/50" open={open}>
-      <form method="dialog" className="modal-box">
+      <form
+        method="dialog"
+        className="modal-box"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h3 className="font-bold text-2xl mb-4">Tạo ticket hỗ trợ</h3>
         <div class="mb-4">
           <label
@@ -29,9 +54,10 @@ const TicketCreateModal = ({ open, setOpen }: ITicketCreateModalProps) => {
           <select
             className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
             id="support-type"
+            {...register('supportType')}
           >
-            <option>Hỗ trợ thanh toán</option>
-            <option>Hỗ trợ giao hàng</option>
+            <option value="payment">Hỗ trợ thanh toán</option>
+            <option value="shipping">Hỗ trợ giao hàng</option>
           </select>
         </div>
         <div class="mb-4">
@@ -43,9 +69,14 @@ const TicketCreateModal = ({ open, setOpen }: ITicketCreateModalProps) => {
             id="email"
             type="text"
             placeholder="Email"
+            {...register('customerEmail', { required: true })}
           />
+          {errors.customerEmail ? (
+            <p className="text-red-500 text-xs italic">
+              Email không được để trống
+            </p>
+          ) : null}
         </div>
-
         <div class="mb-4">
           <label
             class="block text-gray-700 text-sm font-bold mb-2"
@@ -59,6 +90,7 @@ const TicketCreateModal = ({ open, setOpen }: ITicketCreateModalProps) => {
             id="description"
             type="text"
             placeholder="Mô tả"
+            {...register('description', { required: true })}
           />
         </div>
         <div class="mb-4">
