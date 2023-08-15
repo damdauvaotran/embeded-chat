@@ -10,8 +10,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         entryFileNames: 'chat.js',
-        chunkFileNames: '[name]-[hash].js',
-        assetFileNames: '[name]-[hash][extname]',
       },
     },
   },
