@@ -136,7 +136,7 @@ const Chat = ({}) => {
     ]);
   };
 
-  const handleRating = (value: MouseEvent) => {
+  const handleRating = (_: MouseEvent) => {
     setIsShowRating(false);
     setMessages([
       {
