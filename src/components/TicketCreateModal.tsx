@@ -1,5 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { ICreateTicketRequest, createTicket } from '../services/question';
+import { useState } from 'preact/hooks';
+import { GrFormClose } from 'react-icons/gr';
 
 export interface ITicketCreateModalProps {
   open: boolean;
@@ -12,6 +14,7 @@ const TicketCreateModal = ({
   setOpen,
   onSubmitSuccess,
 }: ITicketCreateModalProps) => {
+  const [submitLoading, setSubmitLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -19,27 +22,23 @@ const TicketCreateModal = ({
     reset,
   } = useForm<ICreateTicketRequest>();
 
-  const handleSendTicket = async () => {
-    console.log('send ticket');
-    await sleep(1000);
-    console.log('send ticket success');
-    setOpen(false);
-  };
-
-  const sleep = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-
   const onSubmit = async (values: ICreateTicketRequest) => {
     try {
+      setSubmitLoading(true);
       const data = await createTicket(values);
       // clear form
-      reset()
+      reset();
       onSubmitSuccess?.(data.key);
       setOpen(false);
     } catch (e) {
       console.error(e);
+    } finally {
+      setSubmitLoading(false);
     }
+  };
+
+  const onClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -49,6 +48,12 @@ const TicketCreateModal = ({
         className="modal-box"
         onSubmit={handleSubmit(onSubmit)}
       >
+        <button
+          className="btn btn-ghost btn-xs w-[30px] h-[30px] rounded-md border-none p-0 absolute top-2 right-2"
+          onClick={onClose}
+        >
+          <GrFormClose className="text-3xl" />
+        </button>
         <h3 className="font-bold text-2xl mb-4">Tạo ticket hỗ trợ</h3>
         <div class="mb-4">
           <label
@@ -111,7 +116,10 @@ const TicketCreateModal = ({
           <input type="file" className="file-input w-full max-w-xs" />
         </div>
         <div className="modal-action">
-          <button className="btn" type="submit" onClick={handleSendTicket}>
+          <button className="btn" type="submit" disabled={submitLoading}>
+            {submitLoading ? (
+              <span className="loading loading-spinner"></span>
+            ) : null}
             Gửi
           </button>
         </div>

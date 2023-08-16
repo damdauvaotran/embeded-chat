@@ -31,17 +31,31 @@ interface IMessage {
 
 /** Variables **/
 
+const createResponseMessage = (content: string) => {
+  return {
+    avatar: supporterAvatar,
+    name: 'Support',
+    time: dayjs().format('HH:mm'),
+    content,
+    isResponse: true,
+  };
+};
+
+const createUserMessage = (content: string) => {
+  return {
+    avatar: userAvatar,
+    name: 'Tôi',
+    time: dayjs().format('HH:mm'),
+    content,
+    isResponse: false,
+  };
+};
+
 /** ------------------------- **/
 const Chat = ({}) => {
   /** States **/
   const [messages, setMessages] = useState<IMessage[]>([
-    {
-      avatar: supporterAvatar,
-      name: 'Support',
-      time: '12:45',
-      content: 'Chào bạn, bạn có thể hỏi tôi bất kỳ câu gì?',
-      isResponse: true,
-    },
+    createResponseMessage('Chào bạn, bạn có thể hỏi tôi bất kỳ câu gì?'),
   ]);
   const [isShowSatisfactionChoose, setIsShowSatisfactionChoose] =
     useState(false);
@@ -60,16 +74,7 @@ const Chat = ({}) => {
     if (showInitialSupport) {
       setShowInitialSupport(false);
     }
-    let newMessages = [
-      {
-        avatar: userAvatar,
-        name: 'me',
-        content: messageContent,
-        time: dayjs().format('HH:mm'),
-        isResponse: false,
-      },
-      ...messages,
-    ];
+    let newMessages = [createUserMessage(messageContent), ...messages];
     setMessages(newMessages);
 
     const response = await askQuestion(messageContent);
@@ -77,21 +82,15 @@ const Chat = ({}) => {
   };
 
   const handleSupporterResponse = (messages: IMessage[], answer: IAnswer) => {
-    const newMessages = [
-      {
-        avatar: supporterAvatar,
-        name: 'Support',
-        time: dayjs().format('HH:mm'),
-        content: answer.text,
-        isResponse: true,
-      },
-      ...messages,
-    ];
+    const newMessages = [createResponseMessage(answer.text), ...messages];
     setMessages(newMessages);
     switch (answer.type) {
       case 'satisfaction': {
         setIsShowSatisfactionChoose(true);
         break;
+      }
+      case 'create_ticket': {
+        setShowInitialSupport(true);
       }
     }
   };
@@ -99,14 +98,9 @@ const Chat = ({}) => {
   const handleYesAnswer = () => {
     setIsShowSatisfactionChoose(false);
     setMessages([
-      {
-        avatar: supporterAvatar,
-        name: 'Support',
-        time: dayjs().format('HH:mm'),
-        content:
-          'Cảm ơn bạn đã sử dụng dịch vụ. Mong bạn hãy đánh giá trải nghiệm hỗ trợ',
-        isResponse: true,
-      },
+      createResponseMessage(
+        'Cảm ơn bạn đã sử dụng dịch vụ. Mong bạn hãy đánh giá trải nghiệm hỗ trợ'
+      ),
       ...messages,
     ]);
     setIsShowRating(true);
@@ -125,13 +119,9 @@ const Chat = ({}) => {
   const handleSupportSearchTicket = () => {
     setShowInitialSupport(false);
     setMessages([
-      {
-        avatar: supporterAvatar,
-        name: 'Support',
-        time: dayjs().format('HH:mm'),
-        content: 'Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn',
-        isResponse: true,
-      },
+      createResponseMessage(
+        'Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn'
+      ),
       ...messages,
     ]);
   };
@@ -139,26 +129,18 @@ const Chat = ({}) => {
   const handleRating = (_: MouseEvent) => {
     setIsShowRating(false);
     setMessages([
-      {
-        avatar: supporterAvatar,
-        name: 'Support',
-        time: dayjs().format('HH:mm'),
-        content: 'Cảm ơn bạn đã đánh giá',
-        isResponse: true,
-      },
+      createResponseMessage(
+        'Cảm ơn bạn đã đánh giá trải nghiệm hỗ trợ của chúng tôi'
+      ),
       ...messages,
     ]);
   };
 
   const onCreateTicketSuccess = (key: string) => {
     setMessages([
-      {
-        avatar: supporterAvatar,
-        name: 'Support',
-        time: dayjs().format('HH:mm'),
-        content: `Ticket đã được tạo thành công, mã ticket của bạn là ${key}. Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn`,
-        isResponse: true,
-      },
+      createResponseMessage(
+        `Ticket đã được tạo thành công, mã ticket của bạn là ${key}. Để tra cứu trạng thái ticket, hay nhập mã ticket của bạn`
+      ),
       ...messages,
     ]);
   };

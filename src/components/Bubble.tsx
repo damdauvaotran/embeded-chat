@@ -50,7 +50,11 @@ const Bubble = ({
         {name}
         <time className="text-xs opacity-50 ml-1">{time}</time>
       </div>
-      <div className="chat-bubble">{content}</div>
+      <div className="chat-bubble">
+        {content.split('\n').map((paragraph) => (
+          <div>{paragraph}</div>
+        ))}
+      </div>
       {footer ? <div className="chat-footer opacity-50">{footer}</div> : null}
     </div>
   );
