@@ -71,14 +71,16 @@ const Chat = ({}) => {
 
   /** Functions, Events, Actions... **/
   const onChatSubmit = async (messageContent: string) => {
-    if (showInitialSupport) {
-      setShowInitialSupport(false);
-    }
-    let newMessages = [createUserMessage(messageContent), ...messages];
-    setMessages(newMessages);
+    if (messageContent) {
+      if (showInitialSupport) {
+        setShowInitialSupport(false);
+      }
+      let newMessages = [createUserMessage(messageContent), ...messages];
+      setMessages(newMessages);
 
-    const response = await askQuestion(messageContent);
-    handleSupporterResponse(newMessages, response);
+      const response = await askQuestion(messageContent);
+      handleSupporterResponse(newMessages, response);
+    }
   };
 
   const handleSupporterResponse = (messages: IMessage[], answer: IAnswer) => {
