@@ -96,6 +96,7 @@ const TicketCreateModal = ({
             for="description"
           >
             Mô tả vấn đề của bạn
+            <span className="text-red-500 ml-1">*</span>
           </label>
           <textarea
             rows={5}
@@ -105,6 +106,11 @@ const TicketCreateModal = ({
             placeholder="Mô tả"
             {...register('description', { required: true })}
           />
+          {errors.description ? (
+            <p className="text-red-500 text-xs italic">
+              Mô tả không được để trống
+            </p>
+          ) : null}
         </div>
         <div class="mb-4">
           <label
